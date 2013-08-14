@@ -1,0 +1,3695 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="urn:thesecretserver.com" xmlns:s1="urn:thesecretserver.com/AbstractTypes" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="urn:thesecretserver.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Webservice for standard integration.</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="urn:thesecretserver.com">
+      <s:element name="Authenticate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="organization" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="domain" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AuthenticateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AuthenticateResult" type="tns:AuthenticateResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AuthenticateResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Token" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AuthenticateRADIUS">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="username" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="password" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="organization" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="domain" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="radiusPassword" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AuthenticateRADIUSResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AuthenticateRADIUSResult" type="tns:AuthenticateResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTokenIsValid">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetTokenIsValidResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetTokenIsValidResult" type="tns:TokenIsValidResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TokenIsValidResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="1" maxOccurs="1" name="MaxOfflineSeconds" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetSecretLegacy">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecretLegacyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSecretLegacyResult" type="tns:GetSecretResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetSecretResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretError" type="tns:SecretError" />
+          <s:element minOccurs="0" maxOccurs="1" name="Secret" type="tns:Secret" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SecretError">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorMessage" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="AllowsResponse" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="CommentTitle" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AdditionalCommentTitle" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Secret">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Items" type="tns:ArrayOfSecretItem" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SecretTypeId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="FolderId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsWebLauncher" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="CheckOutMinutesRemaining" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsCheckedOut" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOutUserDisplayName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CheckOutUserId" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsOutOfSync" nillable="true" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsRestricted" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="OutOfSyncReason" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretSettings" type="tns:SecretSettings" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretPermissions" type="tns:SecretPermissions" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSecretItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SecretItem" nillable="true" type="tns:SecretItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SecretItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="FieldId" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="FieldName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsFile" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsNotes" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsPassword" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="FieldDisplayName" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SecretSettings">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="AutoChangeEnabled" nillable="true" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="RequiresApprovalForAccess" nillable="true" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="RequiresComment" nillable="true" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="CheckOutEnabled" nillable="true" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="CheckOutChangePasswordEnabled" nillable="true" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Approvers" type="tns:ArrayOfGroupOrUserRecord" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsChangeToSettings" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfGroupOrUserRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="GroupOrUserRecord" nillable="true" type="tns:GroupOrUserRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="GroupOrUserRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DomainName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsUser" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="GroupId" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="UserId" nillable="true" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SecretPermissions">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CurrentUserHasView" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="CurrentUserHasEdit" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="CurrentUserHasOwner" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="InheritPermissionsEnabled" nillable="true" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsChangeToPermissions" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Permissions" type="tns:ArrayOfPermission" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPermission">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Permission" nillable="true" type="tns:Permission" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Permission">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UserOrGroup" type="tns:GroupOrUserRecord" />
+          <s:element minOccurs="1" maxOccurs="1" name="View" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Edit" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Owner" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetSecret">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="loadSettingsAndPermissions" nillable="true" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="codeResponses" type="tns:ArrayOfCodeResponse" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfCodeResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CodeResponse" nillable="true" type="tns:CodeResponse" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CodeResponse">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ErrorCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="AdditionalComment" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetSecretResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSecretResult" type="tns:GetSecretResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCheckOutStatus">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetCheckOutStatusResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetCheckOutStatusResult" type="tns:GetCheckOutStatusResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetCheckOutStatusResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Secret" type="tns:Secret" />
+          <s:element minOccurs="1" maxOccurs="1" name="CheckOutMinutesRemaining" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsCheckedOut" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOutUserDisplayName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CheckOutUserId" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ChangePassword">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="currentPassword" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newPassword" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ChangePasswordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ChangePasswordResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="WebServiceResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SearchWebPasswordsForUrl">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="url" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchWebPasswordsForUrlResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchWebPasswordsForUrlResult" type="tns:GetWebPasswordResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetWebPasswordResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="WebPasswords" type="tns:ArrayOfWebPassword" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfWebPassword">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="WebPassword" nillable="true" type="tns:WebPassword" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WebPassword">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SecretName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Url" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetSecretsByFieldValue">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fieldName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchTerm" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="showDeleted" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecretsByFieldValueResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSecretsByFieldValueResult" type="tns:GetSecretsByFieldValueResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetSecretsByFieldValueResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Secrets" type="tns:ArrayOfSecret" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSecret">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Secret" nillable="true" type="tns:Secret" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SearchSecretsByFieldValue">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fieldName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchTerm" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="showDeleted" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="showRestricted" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchSecretsByFieldValueResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchSecretsByFieldValueResult" type="tns:SearchSecretsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SearchSecretsResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretSummaries" type="tns:ArrayOfSecretSummary" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSecretSummary">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SecretSummary" nillable="true" type="tns:SecretSummary" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SecretSummary">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="SecretId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretTypeName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="SecretTypeId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="FolderId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsRestricted" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddUser">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="newUser" type="tns:User" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="User">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Id" nillable="true" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="DomainId" nillable="true" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsApplicationAccount" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="RadiusTwoFactor" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="EmailTwoFactor" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="RadiusUserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EmailAddress" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Enabled" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddUserResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddUserResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchSecrets">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchTerm" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeDeleted" nillable="true" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeRestricted" nillable="true" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchSecretsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchSecretsResult" type="tns:SearchSecretsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchSecretsByFolder">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="searchTerm" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="folderId" nillable="true" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeSubFolders" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeDeleted" nillable="true" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeRestricted" nillable="true" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchSecretsByFolderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchSecretsByFolderResult" type="tns:SearchSecretsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFavorites">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeRestricted" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetFavoritesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetFavoritesResult" type="tns:GetFavoritesResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetFavoritesResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretSummaries" type="tns:ArrayOfSecretSummary" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="UpdateIsFavorite">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="isFavorite" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateIsFavoriteResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateIsFavoriteResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddSecret">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretTypeId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="secretName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="secretFieldIds" type="tns:ArrayOfInt" />
+            <s:element minOccurs="0" maxOccurs="1" name="secretItemValues" type="tns:ArrayOfString" />
+            <s:element minOccurs="1" maxOccurs="1" name="folderId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddSecretResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddSecretResult" type="tns:AddSecretResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AddSecretResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Secret" type="tns:Secret" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AddNewSecret">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="secret" type="tns:Secret" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddNewSecretResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddNewSecretResult" type="tns:AddSecretResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNewSecret">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretTypeId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="folderId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetNewSecretResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetNewSecretResult" type="tns:GetSecretResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecretTemplateFields">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretTypeId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecretTemplateFieldsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSecretTemplateFieldsResult" type="tns:GetSecretTemplateFieldsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetSecretTemplateFieldsResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Fields" type="tns:ArrayOfSecretField" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSecretField">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SecretField" nillable="true" type="tns:SecretField" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SecretField">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsPassword" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsUrl" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsNotes" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsFile" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="UpdateSecret">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="secret" type="tns:Secret" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateSecretResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateSecretResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecretTemplates">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecretTemplatesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSecretTemplatesResult" type="tns:GetSecretTemplatesResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetSecretTemplatesResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretTemplates" type="tns:ArrayOfSecretTemplate" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSecretTemplate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SecretTemplate" nillable="true" type="tns:SecretTemplate" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SecretTemplate">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Fields" type="tns:ArrayOfSecretField" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GeneratePassword">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretFieldId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GeneratePasswordResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GeneratePasswordResult" type="tns:GeneratePasswordResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GeneratePasswordResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="GeneratedPassword" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DeactivateSecret">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DeactivateSecretResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DeactivateSecretResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VersionGet">
+        <s:complexType />
+      </s:element>
+      <s:element name="VersionGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VersionGetResult" type="tns:VersionGetResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="VersionGetResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Version" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="FolderGet">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="folderId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderGetResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderGetResult" type="tns:GetFolderResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetFolderResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Folder" type="tns:Folder" />
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="1" maxOccurs="1" name="Success" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Folder">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TypeId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ParentFolderId" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="FolderUpdate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="modifiedFolder" type="tns:Folder" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderUpdateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderUpdateResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderGetAllChildren">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentFolderId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderGetAllChildrenResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderGetAllChildrenResult" type="tns:GetFoldersResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetFoldersResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Folders" type="tns:ArrayOfFolder" />
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="1" maxOccurs="1" name="Success" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfFolder">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Folder" nillable="true" type="tns:Folder" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="FolderCreate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="folderName" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="parentFolderId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="folderTypeId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="FolderCreateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FolderCreateResult" type="tns:CreateFolderResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CreateFolderResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:WebServiceResult">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="FolderId" type="s:int" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="SearchFolders">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="folderName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchFoldersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchFoldersResult" type="tns:SearchFolderResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SearchFolderResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="Folders" type="tns:ArrayOfFolder" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="DownloadFileAttachment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DownloadFileAttachmentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DownloadFileAttachmentResult" type="tns:FileDownloadResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="FileDownloadResult">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:WebServiceResult">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="FileAttachment" type="s:base64Binary" />
+              <s:element minOccurs="0" maxOccurs="1" name="FileName" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="DownloadFileAttachmentByItemId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretItemId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="DownloadFileAttachmentByItemIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="DownloadFileAttachmentByItemIdResult" type="tns:FileDownloadResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UploadFileAttachment">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="fileData" type="s:base64Binary" />
+            <s:element minOccurs="0" maxOccurs="1" name="fileName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UploadFileAttachmentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UploadFileAttachmentResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UploadFileAttachmentByItemId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretItemId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="fileData" type="s:base64Binary" />
+            <s:element minOccurs="0" maxOccurs="1" name="fileName" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UploadFileAttachmentByItemIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UploadFileAttachmentByItemIdResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExpireSecret">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ExpireSecretResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ExpireSecretResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetCheckOutEnabled">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="setCheckOut" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="setPasswordChangeOnCheckIn" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="checkOutInterval" nillable="true" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SetCheckOutEnabledResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SetCheckOutEnabledResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ImportXML">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="xml" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ImportXMLResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ImportXMLResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecretAudit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecretAuditResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSecretAuditResult" type="tns:GetSecretAuditResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetSecretAuditResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretAudits" type="tns:ArrayOfAuditSecret" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAuditSecret">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AuditSecret" nillable="true" type="tns:AuditSecret" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AuditSecret">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="AuditSecretId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="SecretId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="DateRecorded" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Action" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Notes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="UserId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecretName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="IpAddress" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReferenceId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ByUserDisplayName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TicketNumber" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetAgents">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetAgentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetAgentsResult" type="tns:GetAgentsResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="GetAgentsResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="RemoteAgents" type="tns:ArrayOfRemoteAgent" />
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfString" />
+          <s:element minOccurs="1" maxOccurs="1" name="Success" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfRemoteAgent">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="RemoteAgent" nillable="true" type="tns:RemoteAgent" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="RemoteAgent">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Id" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="DisplayName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AssignAgent">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="agentId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AssignAgentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AssignAgentResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckIn">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckInResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckInResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddSecretCustomAudit">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="notes" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ipAddress" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="referenceId" nillable="true" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="ticketNumber" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="userId" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AddSecretCustomAuditResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AddSecretCustomAuditResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateSecretPermission">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="token" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="secretId" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="groupOrUserRecord" type="tns:GroupOrUserRecord" />
+            <s:element minOccurs="1" maxOccurs="1" name="view" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="edit" type="s:boolean" />
+            <s:element minOccurs="1" maxOccurs="1" name="owner" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="UpdateSecretPermissionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="UpdateSecretPermissionResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckInByKey">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="sessionKey" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckInByKeyResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckInByKeyResult" type="tns:WebServiceResult" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="AuthenticateResult" nillable="true" type="tns:AuthenticateResult" />
+      <s:element name="TokenIsValidResult" nillable="true" type="tns:TokenIsValidResult" />
+      <s:element name="GetSecretResult" nillable="true" type="tns:GetSecretResult" />
+      <s:element name="GetCheckOutStatusResult" nillable="true" type="tns:GetCheckOutStatusResult" />
+      <s:element name="WebServiceResult" nillable="true" type="tns:WebServiceResult" />
+      <s:element name="GetWebPasswordResult" nillable="true" type="tns:GetWebPasswordResult" />
+      <s:element name="GetSecretsByFieldValueResult" nillable="true" type="tns:GetSecretsByFieldValueResult" />
+      <s:element name="SearchSecretsResult" nillable="true" type="tns:SearchSecretsResult" />
+      <s:element name="GetFavoritesResult" nillable="true" type="tns:GetFavoritesResult" />
+      <s:element name="AddSecretResult" nillable="true" type="tns:AddSecretResult" />
+      <s:element name="GetSecretTemplateFieldsResult" nillable="true" type="tns:GetSecretTemplateFieldsResult" />
+      <s:element name="GetSecretTemplatesResult" nillable="true" type="tns:GetSecretTemplatesResult" />
+      <s:element name="GeneratePasswordResult" nillable="true" type="tns:GeneratePasswordResult" />
+      <s:element name="VersionGetResult" nillable="true" type="tns:VersionGetResult" />
+      <s:element name="GetFolderResult" nillable="true" type="tns:GetFolderResult" />
+      <s:element name="GetFoldersResult" nillable="true" type="tns:GetFoldersResult" />
+      <s:element name="CreateFolderResult" nillable="true" type="tns:CreateFolderResult" />
+      <s:element name="SearchFolderResult" nillable="true" type="tns:SearchFolderResult" />
+      <s:element name="FileDownloadResult" nillable="true" type="tns:FileDownloadResult" />
+      <s:element name="GetSecretAuditResult" nillable="true" type="tns:GetSecretAuditResult" />
+      <s:element name="GetAgentsResult" nillable="true" type="tns:GetAgentsResult" />
+    </s:schema>
+    <s:schema targetNamespace="urn:thesecretserver.com/AbstractTypes">
+      <s:import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+      <s:complexType name="StringArray">
+        <s:complexContent mixed="false">
+          <s:restriction base="soapenc:Array">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="unbounded" name="String" type="s:string" />
+            </s:sequence>
+          </s:restriction>
+        </s:complexContent>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="AuthenticateSoapIn">
+    <wsdl:part name="parameters" element="tns:Authenticate" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateSoapOut">
+    <wsdl:part name="parameters" element="tns:AuthenticateResponse" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateRADIUSSoapIn">
+    <wsdl:part name="parameters" element="tns:AuthenticateRADIUS" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateRADIUSSoapOut">
+    <wsdl:part name="parameters" element="tns:AuthenticateRADIUSResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetTokenIsValidSoapIn">
+    <wsdl:part name="parameters" element="tns:GetTokenIsValid" />
+  </wsdl:message>
+  <wsdl:message name="GetTokenIsValidSoapOut">
+    <wsdl:part name="parameters" element="tns:GetTokenIsValidResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretLegacySoapIn">
+    <wsdl:part name="parameters" element="tns:GetSecretLegacy" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretLegacySoapOut">
+    <wsdl:part name="parameters" element="tns:GetSecretLegacyResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSecret" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSecretResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetCheckOutStatusSoapIn">
+    <wsdl:part name="parameters" element="tns:GetCheckOutStatus" />
+  </wsdl:message>
+  <wsdl:message name="GetCheckOutStatusSoapOut">
+    <wsdl:part name="parameters" element="tns:GetCheckOutStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="ChangePasswordSoapIn">
+    <wsdl:part name="parameters" element="tns:ChangePassword" />
+  </wsdl:message>
+  <wsdl:message name="ChangePasswordSoapOut">
+    <wsdl:part name="parameters" element="tns:ChangePasswordResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchWebPasswordsForUrlSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchWebPasswordsForUrl" />
+  </wsdl:message>
+  <wsdl:message name="SearchWebPasswordsForUrlSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchWebPasswordsForUrlResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretsByFieldValueSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSecretsByFieldValue" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretsByFieldValueSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSecretsByFieldValueResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsByFieldValueSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchSecretsByFieldValue" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsByFieldValueSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchSecretsByFieldValueResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddUserSoapIn">
+    <wsdl:part name="parameters" element="tns:AddUser" />
+  </wsdl:message>
+  <wsdl:message name="AddUserSoapOut">
+    <wsdl:part name="parameters" element="tns:AddUserResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchSecrets" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchSecretsResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsByFolderSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchSecretsByFolder" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsByFolderSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchSecretsByFolderResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFavoritesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetFavorites" />
+  </wsdl:message>
+  <wsdl:message name="GetFavoritesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetFavoritesResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateIsFavoriteSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateIsFavorite" />
+  </wsdl:message>
+  <wsdl:message name="UpdateIsFavoriteSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateIsFavoriteResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddSecretSoapIn">
+    <wsdl:part name="parameters" element="tns:AddSecret" />
+  </wsdl:message>
+  <wsdl:message name="AddSecretSoapOut">
+    <wsdl:part name="parameters" element="tns:AddSecretResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddNewSecretSoapIn">
+    <wsdl:part name="parameters" element="tns:AddNewSecret" />
+  </wsdl:message>
+  <wsdl:message name="AddNewSecretSoapOut">
+    <wsdl:part name="parameters" element="tns:AddNewSecretResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetNewSecretSoapIn">
+    <wsdl:part name="parameters" element="tns:GetNewSecret" />
+  </wsdl:message>
+  <wsdl:message name="GetNewSecretSoapOut">
+    <wsdl:part name="parameters" element="tns:GetNewSecretResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplateFieldsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSecretTemplateFields" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplateFieldsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSecretTemplateFieldsResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSecretSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateSecret" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSecretSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateSecretResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplatesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSecretTemplates" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplatesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSecretTemplatesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GeneratePasswordSoapIn">
+    <wsdl:part name="parameters" element="tns:GeneratePassword" />
+  </wsdl:message>
+  <wsdl:message name="GeneratePasswordSoapOut">
+    <wsdl:part name="parameters" element="tns:GeneratePasswordResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeactivateSecretSoapIn">
+    <wsdl:part name="parameters" element="tns:DeactivateSecret" />
+  </wsdl:message>
+  <wsdl:message name="DeactivateSecretSoapOut">
+    <wsdl:part name="parameters" element="tns:DeactivateSecretResponse" />
+  </wsdl:message>
+  <wsdl:message name="VersionGetSoapIn">
+    <wsdl:part name="parameters" element="tns:VersionGet" />
+  </wsdl:message>
+  <wsdl:message name="VersionGetSoapOut">
+    <wsdl:part name="parameters" element="tns:VersionGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderGet" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderGetResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderUpdateSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderUpdate" />
+  </wsdl:message>
+  <wsdl:message name="FolderUpdateSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderUpdateResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetAllChildrenSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderGetAllChildren" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetAllChildrenSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderGetAllChildrenResponse" />
+  </wsdl:message>
+  <wsdl:message name="FolderCreateSoapIn">
+    <wsdl:part name="parameters" element="tns:FolderCreate" />
+  </wsdl:message>
+  <wsdl:message name="FolderCreateSoapOut">
+    <wsdl:part name="parameters" element="tns:FolderCreateResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchFoldersSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchFolders" />
+  </wsdl:message>
+  <wsdl:message name="SearchFoldersSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchFoldersResponse" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentSoapIn">
+    <wsdl:part name="parameters" element="tns:DownloadFileAttachment" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentSoapOut">
+    <wsdl:part name="parameters" element="tns:DownloadFileAttachmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentByItemIdSoapIn">
+    <wsdl:part name="parameters" element="tns:DownloadFileAttachmentByItemId" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentByItemIdSoapOut">
+    <wsdl:part name="parameters" element="tns:DownloadFileAttachmentByItemIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentSoapIn">
+    <wsdl:part name="parameters" element="tns:UploadFileAttachment" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentSoapOut">
+    <wsdl:part name="parameters" element="tns:UploadFileAttachmentResponse" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentByItemIdSoapIn">
+    <wsdl:part name="parameters" element="tns:UploadFileAttachmentByItemId" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentByItemIdSoapOut">
+    <wsdl:part name="parameters" element="tns:UploadFileAttachmentByItemIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="ExpireSecretSoapIn">
+    <wsdl:part name="parameters" element="tns:ExpireSecret" />
+  </wsdl:message>
+  <wsdl:message name="ExpireSecretSoapOut">
+    <wsdl:part name="parameters" element="tns:ExpireSecretResponse" />
+  </wsdl:message>
+  <wsdl:message name="SetCheckOutEnabledSoapIn">
+    <wsdl:part name="parameters" element="tns:SetCheckOutEnabled" />
+  </wsdl:message>
+  <wsdl:message name="SetCheckOutEnabledSoapOut">
+    <wsdl:part name="parameters" element="tns:SetCheckOutEnabledResponse" />
+  </wsdl:message>
+  <wsdl:message name="ImportXMLSoapIn">
+    <wsdl:part name="parameters" element="tns:ImportXML" />
+  </wsdl:message>
+  <wsdl:message name="ImportXMLSoapOut">
+    <wsdl:part name="parameters" element="tns:ImportXMLResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretAuditSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSecretAudit" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretAuditSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSecretAuditResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAgentsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetAgents" />
+  </wsdl:message>
+  <wsdl:message name="GetAgentsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetAgentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="AssignAgentSoapIn">
+    <wsdl:part name="parameters" element="tns:AssignAgent" />
+  </wsdl:message>
+  <wsdl:message name="AssignAgentSoapOut">
+    <wsdl:part name="parameters" element="tns:AssignAgentResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckInSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckIn" />
+  </wsdl:message>
+  <wsdl:message name="CheckInSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckInResponse" />
+  </wsdl:message>
+  <wsdl:message name="AddSecretCustomAuditSoapIn">
+    <wsdl:part name="parameters" element="tns:AddSecretCustomAudit" />
+  </wsdl:message>
+  <wsdl:message name="AddSecretCustomAuditSoapOut">
+    <wsdl:part name="parameters" element="tns:AddSecretCustomAuditResponse" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSecretPermissionSoapIn">
+    <wsdl:part name="parameters" element="tns:UpdateSecretPermission" />
+  </wsdl:message>
+  <wsdl:message name="UpdateSecretPermissionSoapOut">
+    <wsdl:part name="parameters" element="tns:UpdateSecretPermissionResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckInByKeySoapIn">
+    <wsdl:part name="parameters" element="tns:CheckInByKey" />
+  </wsdl:message>
+  <wsdl:message name="CheckInByKeySoapOut">
+    <wsdl:part name="parameters" element="tns:CheckInByKeyResponse" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="organization" type="s:string" />
+    <wsdl:part name="domain" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateHttpGetOut">
+    <wsdl:part name="Body" element="tns:AuthenticateResult" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateRADIUSHttpGetIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="organization" type="s:string" />
+    <wsdl:part name="domain" type="s:string" />
+    <wsdl:part name="radiusPassword" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateRADIUSHttpGetOut">
+    <wsdl:part name="Body" element="tns:AuthenticateResult" />
+  </wsdl:message>
+  <wsdl:message name="GetTokenIsValidHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTokenIsValidHttpGetOut">
+    <wsdl:part name="Body" element="tns:TokenIsValidResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretLegacyHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretLegacyHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetSecretResult" />
+  </wsdl:message>
+  <wsdl:message name="GetCheckOutStatusHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCheckOutStatusHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetCheckOutStatusResult" />
+  </wsdl:message>
+  <wsdl:message name="ChangePasswordHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="currentPassword" type="s:string" />
+    <wsdl:part name="newPassword" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangePasswordHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="SearchWebPasswordsForUrlHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="url" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SearchWebPasswordsForUrlHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetWebPasswordResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretsByFieldValueHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="fieldName" type="s:string" />
+    <wsdl:part name="searchTerm" type="s:string" />
+    <wsdl:part name="showDeleted" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretsByFieldValueHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetSecretsByFieldValueResult" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsByFieldValueHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="fieldName" type="s:string" />
+    <wsdl:part name="searchTerm" type="s:string" />
+    <wsdl:part name="showDeleted" type="s:string" />
+    <wsdl:part name="showRestricted" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsByFieldValueHttpGetOut">
+    <wsdl:part name="Body" element="tns:SearchSecretsResult" />
+  </wsdl:message>
+  <wsdl:message name="GetFavoritesHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="includeRestricted" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetFavoritesHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetFavoritesResult" />
+  </wsdl:message>
+  <wsdl:message name="UpdateIsFavoriteHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="isFavorite" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateIsFavoriteHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="AddSecretHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretTypeId" type="s:string" />
+    <wsdl:part name="secretName" type="s:string" />
+    <wsdl:part name="secretFieldIds" type="s1:StringArray" />
+    <wsdl:part name="secretItemValues" type="s1:StringArray" />
+    <wsdl:part name="folderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddSecretHttpGetOut">
+    <wsdl:part name="Body" element="tns:AddSecretResult" />
+  </wsdl:message>
+  <wsdl:message name="GetNewSecretHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretTypeId" type="s:string" />
+    <wsdl:part name="folderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetNewSecretHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetSecretResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplateFieldsHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplateFieldsHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetSecretTemplateFieldsResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplatesHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplatesHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetSecretTemplatesResult" />
+  </wsdl:message>
+  <wsdl:message name="GeneratePasswordHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretFieldId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GeneratePasswordHttpGetOut">
+    <wsdl:part name="Body" element="tns:GeneratePasswordResult" />
+  </wsdl:message>
+  <wsdl:message name="DeactivateSecretHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeactivateSecretHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="VersionGetHttpGetIn" />
+  <wsdl:message name="VersionGetHttpGetOut">
+    <wsdl:part name="Body" element="tns:VersionGetResult" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="folderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetFolderResult" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetAllChildrenHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="parentFolderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetAllChildrenHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetFoldersResult" />
+  </wsdl:message>
+  <wsdl:message name="FolderCreateHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="folderName" type="s:string" />
+    <wsdl:part name="parentFolderId" type="s:string" />
+    <wsdl:part name="folderTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="FolderCreateHttpGetOut">
+    <wsdl:part name="Body" element="tns:CreateFolderResult" />
+  </wsdl:message>
+  <wsdl:message name="SearchFoldersHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="folderName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SearchFoldersHttpGetOut">
+    <wsdl:part name="Body" element="tns:SearchFolderResult" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentHttpGetOut">
+    <wsdl:part name="Body" element="tns:FileDownloadResult" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentByItemIdHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="secretItemId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentByItemIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:FileDownloadResult" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="fileData" type="s1:StringArray" />
+    <wsdl:part name="fileName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentByItemIdHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="secretItemId" type="s:string" />
+    <wsdl:part name="fileData" type="s1:StringArray" />
+    <wsdl:part name="fileName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentByItemIdHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="ExpireSecretHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ExpireSecretHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="ImportXMLHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="xml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ImportXMLHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretAuditHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretAuditHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetSecretAuditResult" />
+  </wsdl:message>
+  <wsdl:message name="GetAgentsHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetAgentsHttpGetOut">
+    <wsdl:part name="Body" element="tns:GetAgentsResult" />
+  </wsdl:message>
+  <wsdl:message name="AssignAgentHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="agentId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AssignAgentHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="CheckInHttpGetIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckInHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="CheckInByKeyHttpGetIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckInByKeyHttpGetOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="organization" type="s:string" />
+    <wsdl:part name="domain" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateHttpPostOut">
+    <wsdl:part name="Body" element="tns:AuthenticateResult" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateRADIUSHttpPostIn">
+    <wsdl:part name="username" type="s:string" />
+    <wsdl:part name="password" type="s:string" />
+    <wsdl:part name="organization" type="s:string" />
+    <wsdl:part name="domain" type="s:string" />
+    <wsdl:part name="radiusPassword" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AuthenticateRADIUSHttpPostOut">
+    <wsdl:part name="Body" element="tns:AuthenticateResult" />
+  </wsdl:message>
+  <wsdl:message name="GetTokenIsValidHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetTokenIsValidHttpPostOut">
+    <wsdl:part name="Body" element="tns:TokenIsValidResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretLegacyHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretLegacyHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetSecretResult" />
+  </wsdl:message>
+  <wsdl:message name="GetCheckOutStatusHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetCheckOutStatusHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetCheckOutStatusResult" />
+  </wsdl:message>
+  <wsdl:message name="ChangePasswordHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="currentPassword" type="s:string" />
+    <wsdl:part name="newPassword" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ChangePasswordHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="SearchWebPasswordsForUrlHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="url" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SearchWebPasswordsForUrlHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetWebPasswordResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretsByFieldValueHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="fieldName" type="s:string" />
+    <wsdl:part name="searchTerm" type="s:string" />
+    <wsdl:part name="showDeleted" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretsByFieldValueHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetSecretsByFieldValueResult" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsByFieldValueHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="fieldName" type="s:string" />
+    <wsdl:part name="searchTerm" type="s:string" />
+    <wsdl:part name="showDeleted" type="s:string" />
+    <wsdl:part name="showRestricted" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SearchSecretsByFieldValueHttpPostOut">
+    <wsdl:part name="Body" element="tns:SearchSecretsResult" />
+  </wsdl:message>
+  <wsdl:message name="GetFavoritesHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="includeRestricted" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetFavoritesHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetFavoritesResult" />
+  </wsdl:message>
+  <wsdl:message name="UpdateIsFavoriteHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="isFavorite" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UpdateIsFavoriteHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="AddSecretHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretTypeId" type="s:string" />
+    <wsdl:part name="secretName" type="s:string" />
+    <wsdl:part name="secretFieldIds" type="s1:StringArray" />
+    <wsdl:part name="secretItemValues" type="s1:StringArray" />
+    <wsdl:part name="folderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AddSecretHttpPostOut">
+    <wsdl:part name="Body" element="tns:AddSecretResult" />
+  </wsdl:message>
+  <wsdl:message name="GetNewSecretHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretTypeId" type="s:string" />
+    <wsdl:part name="folderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetNewSecretHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetSecretResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplateFieldsHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplateFieldsHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetSecretTemplateFieldsResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplatesHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretTemplatesHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetSecretTemplatesResult" />
+  </wsdl:message>
+  <wsdl:message name="GeneratePasswordHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretFieldId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GeneratePasswordHttpPostOut">
+    <wsdl:part name="Body" element="tns:GeneratePasswordResult" />
+  </wsdl:message>
+  <wsdl:message name="DeactivateSecretHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DeactivateSecretHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="VersionGetHttpPostIn" />
+  <wsdl:message name="VersionGetHttpPostOut">
+    <wsdl:part name="Body" element="tns:VersionGetResult" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="folderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetFolderResult" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetAllChildrenHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="parentFolderId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="FolderGetAllChildrenHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetFoldersResult" />
+  </wsdl:message>
+  <wsdl:message name="FolderCreateHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="folderName" type="s:string" />
+    <wsdl:part name="parentFolderId" type="s:string" />
+    <wsdl:part name="folderTypeId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="FolderCreateHttpPostOut">
+    <wsdl:part name="Body" element="tns:CreateFolderResult" />
+  </wsdl:message>
+  <wsdl:message name="SearchFoldersHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="folderName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="SearchFoldersHttpPostOut">
+    <wsdl:part name="Body" element="tns:SearchFolderResult" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentHttpPostOut">
+    <wsdl:part name="Body" element="tns:FileDownloadResult" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentByItemIdHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="secretItemId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="DownloadFileAttachmentByItemIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:FileDownloadResult" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="fileData" type="s1:StringArray" />
+    <wsdl:part name="fileName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentByItemIdHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="secretItemId" type="s:string" />
+    <wsdl:part name="fileData" type="s1:StringArray" />
+    <wsdl:part name="fileName" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="UploadFileAttachmentByItemIdHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="ExpireSecretHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ExpireSecretHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="ImportXMLHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="xml" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ImportXMLHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretAuditHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecretAuditHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetSecretAuditResult" />
+  </wsdl:message>
+  <wsdl:message name="GetAgentsHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetAgentsHttpPostOut">
+    <wsdl:part name="Body" element="tns:GetAgentsResult" />
+  </wsdl:message>
+  <wsdl:message name="AssignAgentHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+    <wsdl:part name="agentId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="AssignAgentHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="CheckInHttpPostIn">
+    <wsdl:part name="token" type="s:string" />
+    <wsdl:part name="secretId" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckInHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:message name="CheckInByKeyHttpPostIn">
+    <wsdl:part name="sessionKey" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="CheckInByKeyHttpPostOut">
+    <wsdl:part name="Body" element="tns:WebServiceResult" />
+  </wsdl:message>
+  <wsdl:portType name="SSWebServiceSoap">
+    <wsdl:operation name="Authenticate">
+      <wsdl:input message="tns:AuthenticateSoapIn" />
+      <wsdl:output message="tns:AuthenticateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateRADIUS">
+      <wsdl:input message="tns:AuthenticateRADIUSSoapIn" />
+      <wsdl:output message="tns:AuthenticateRADIUSSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTokenIsValid">
+      <wsdl:input message="tns:GetTokenIsValidSoapIn" />
+      <wsdl:output message="tns:GetTokenIsValidSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretLegacy">
+      <wsdl:input message="tns:GetSecretLegacySoapIn" />
+      <wsdl:output message="tns:GetSecretLegacySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecret">
+      <wsdl:input message="tns:GetSecretSoapIn" />
+      <wsdl:output message="tns:GetSecretSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCheckOutStatus">
+      <wsdl:input message="tns:GetCheckOutStatusSoapIn" />
+      <wsdl:output message="tns:GetCheckOutStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangePassword">
+      <wsdl:input message="tns:ChangePasswordSoapIn" />
+      <wsdl:output message="tns:ChangePasswordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchWebPasswordsForUrl">
+      <wsdl:input message="tns:SearchWebPasswordsForUrlSoapIn" />
+      <wsdl:output message="tns:SearchWebPasswordsForUrlSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretsByFieldValue">
+      <wsdl:input message="tns:GetSecretsByFieldValueSoapIn" />
+      <wsdl:output message="tns:GetSecretsByFieldValueSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFieldValue">
+      <wsdl:input message="tns:SearchSecretsByFieldValueSoapIn" />
+      <wsdl:output message="tns:SearchSecretsByFieldValueSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <wsdl:input message="tns:AddUserSoapIn" />
+      <wsdl:output message="tns:AddUserSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecrets">
+      <wsdl:input message="tns:SearchSecretsSoapIn" />
+      <wsdl:output message="tns:SearchSecretsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFolder">
+      <wsdl:input message="tns:SearchSecretsByFolderSoapIn" />
+      <wsdl:output message="tns:SearchSecretsByFolderSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFavorites">
+      <wsdl:input message="tns:GetFavoritesSoapIn" />
+      <wsdl:output message="tns:GetFavoritesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateIsFavorite">
+      <wsdl:input message="tns:UpdateIsFavoriteSoapIn" />
+      <wsdl:output message="tns:UpdateIsFavoriteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddSecret">
+      <wsdl:input message="tns:AddSecretSoapIn" />
+      <wsdl:output message="tns:AddSecretSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddNewSecret">
+      <wsdl:input message="tns:AddNewSecretSoapIn" />
+      <wsdl:output message="tns:AddNewSecretSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSecret">
+      <wsdl:input message="tns:GetNewSecretSoapIn" />
+      <wsdl:output message="tns:GetNewSecretSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplateFields">
+      <wsdl:input message="tns:GetSecretTemplateFieldsSoapIn" />
+      <wsdl:output message="tns:GetSecretTemplateFieldsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSecret">
+      <wsdl:input message="tns:UpdateSecretSoapIn" />
+      <wsdl:output message="tns:UpdateSecretSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplates">
+      <wsdl:input message="tns:GetSecretTemplatesSoapIn" />
+      <wsdl:output message="tns:GetSecretTemplatesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GeneratePassword">
+      <wsdl:input message="tns:GeneratePasswordSoapIn" />
+      <wsdl:output message="tns:GeneratePasswordSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeactivateSecret">
+      <wsdl:input message="tns:DeactivateSecretSoapIn" />
+      <wsdl:output message="tns:DeactivateSecretSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <wsdl:input message="tns:VersionGetSoapIn" />
+      <wsdl:output message="tns:VersionGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderGet">
+      <wsdl:input message="tns:FolderGetSoapIn" />
+      <wsdl:output message="tns:FolderGetSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderUpdate">
+      <wsdl:input message="tns:FolderUpdateSoapIn" />
+      <wsdl:output message="tns:FolderUpdateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderGetAllChildren">
+      <wsdl:input message="tns:FolderGetAllChildrenSoapIn" />
+      <wsdl:output message="tns:FolderGetAllChildrenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderCreate">
+      <wsdl:input message="tns:FolderCreateSoapIn" />
+      <wsdl:output message="tns:FolderCreateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchFolders">
+      <wsdl:input message="tns:SearchFoldersSoapIn" />
+      <wsdl:output message="tns:SearchFoldersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachment">
+      <wsdl:input message="tns:DownloadFileAttachmentSoapIn" />
+      <wsdl:output message="tns:DownloadFileAttachmentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachmentByItemId">
+      <wsdl:input message="tns:DownloadFileAttachmentByItemIdSoapIn" />
+      <wsdl:output message="tns:DownloadFileAttachmentByItemIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachment">
+      <wsdl:input message="tns:UploadFileAttachmentSoapIn" />
+      <wsdl:output message="tns:UploadFileAttachmentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachmentByItemId">
+      <wsdl:input message="tns:UploadFileAttachmentByItemIdSoapIn" />
+      <wsdl:output message="tns:UploadFileAttachmentByItemIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExpireSecret">
+      <wsdl:input message="tns:ExpireSecretSoapIn" />
+      <wsdl:output message="tns:ExpireSecretSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SetCheckOutEnabled">
+      <wsdl:input message="tns:SetCheckOutEnabledSoapIn" />
+      <wsdl:output message="tns:SetCheckOutEnabledSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ImportXML">
+      <wsdl:input message="tns:ImportXMLSoapIn" />
+      <wsdl:output message="tns:ImportXMLSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretAudit">
+      <wsdl:input message="tns:GetSecretAuditSoapIn" />
+      <wsdl:output message="tns:GetSecretAuditSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAgents">
+      <wsdl:input message="tns:GetAgentsSoapIn" />
+      <wsdl:output message="tns:GetAgentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AssignAgent">
+      <wsdl:input message="tns:AssignAgentSoapIn" />
+      <wsdl:output message="tns:AssignAgentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckIn">
+      <wsdl:input message="tns:CheckInSoapIn" />
+      <wsdl:output message="tns:CheckInSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddSecretCustomAudit">
+      <wsdl:input message="tns:AddSecretCustomAuditSoapIn" />
+      <wsdl:output message="tns:AddSecretCustomAuditSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSecretPermission">
+      <wsdl:input message="tns:UpdateSecretPermissionSoapIn" />
+      <wsdl:output message="tns:UpdateSecretPermissionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckInByKey">
+      <wsdl:input message="tns:CheckInByKeySoapIn" />
+      <wsdl:output message="tns:CheckInByKeySoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="SSWebServiceHttpGet">
+    <wsdl:operation name="Authenticate">
+      <wsdl:input message="tns:AuthenticateHttpGetIn" />
+      <wsdl:output message="tns:AuthenticateHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateRADIUS">
+      <wsdl:input message="tns:AuthenticateRADIUSHttpGetIn" />
+      <wsdl:output message="tns:AuthenticateRADIUSHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTokenIsValid">
+      <wsdl:input message="tns:GetTokenIsValidHttpGetIn" />
+      <wsdl:output message="tns:GetTokenIsValidHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretLegacy">
+      <wsdl:input message="tns:GetSecretLegacyHttpGetIn" />
+      <wsdl:output message="tns:GetSecretLegacyHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCheckOutStatus">
+      <wsdl:input message="tns:GetCheckOutStatusHttpGetIn" />
+      <wsdl:output message="tns:GetCheckOutStatusHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangePassword">
+      <wsdl:input message="tns:ChangePasswordHttpGetIn" />
+      <wsdl:output message="tns:ChangePasswordHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchWebPasswordsForUrl">
+      <wsdl:input message="tns:SearchWebPasswordsForUrlHttpGetIn" />
+      <wsdl:output message="tns:SearchWebPasswordsForUrlHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretsByFieldValue">
+      <wsdl:input message="tns:GetSecretsByFieldValueHttpGetIn" />
+      <wsdl:output message="tns:GetSecretsByFieldValueHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFieldValue">
+      <wsdl:input message="tns:SearchSecretsByFieldValueHttpGetIn" />
+      <wsdl:output message="tns:SearchSecretsByFieldValueHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFavorites">
+      <wsdl:input message="tns:GetFavoritesHttpGetIn" />
+      <wsdl:output message="tns:GetFavoritesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateIsFavorite">
+      <wsdl:input message="tns:UpdateIsFavoriteHttpGetIn" />
+      <wsdl:output message="tns:UpdateIsFavoriteHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddSecret">
+      <wsdl:input message="tns:AddSecretHttpGetIn" />
+      <wsdl:output message="tns:AddSecretHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSecret">
+      <wsdl:input message="tns:GetNewSecretHttpGetIn" />
+      <wsdl:output message="tns:GetNewSecretHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplateFields">
+      <wsdl:input message="tns:GetSecretTemplateFieldsHttpGetIn" />
+      <wsdl:output message="tns:GetSecretTemplateFieldsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplates">
+      <wsdl:input message="tns:GetSecretTemplatesHttpGetIn" />
+      <wsdl:output message="tns:GetSecretTemplatesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GeneratePassword">
+      <wsdl:input message="tns:GeneratePasswordHttpGetIn" />
+      <wsdl:output message="tns:GeneratePasswordHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeactivateSecret">
+      <wsdl:input message="tns:DeactivateSecretHttpGetIn" />
+      <wsdl:output message="tns:DeactivateSecretHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <wsdl:input message="tns:VersionGetHttpGetIn" />
+      <wsdl:output message="tns:VersionGetHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderGet">
+      <wsdl:input message="tns:FolderGetHttpGetIn" />
+      <wsdl:output message="tns:FolderGetHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderGetAllChildren">
+      <wsdl:input message="tns:FolderGetAllChildrenHttpGetIn" />
+      <wsdl:output message="tns:FolderGetAllChildrenHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderCreate">
+      <wsdl:input message="tns:FolderCreateHttpGetIn" />
+      <wsdl:output message="tns:FolderCreateHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchFolders">
+      <wsdl:input message="tns:SearchFoldersHttpGetIn" />
+      <wsdl:output message="tns:SearchFoldersHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachment">
+      <wsdl:input message="tns:DownloadFileAttachmentHttpGetIn" />
+      <wsdl:output message="tns:DownloadFileAttachmentHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachmentByItemId">
+      <wsdl:input message="tns:DownloadFileAttachmentByItemIdHttpGetIn" />
+      <wsdl:output message="tns:DownloadFileAttachmentByItemIdHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachment">
+      <wsdl:input message="tns:UploadFileAttachmentHttpGetIn" />
+      <wsdl:output message="tns:UploadFileAttachmentHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachmentByItemId">
+      <wsdl:input message="tns:UploadFileAttachmentByItemIdHttpGetIn" />
+      <wsdl:output message="tns:UploadFileAttachmentByItemIdHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExpireSecret">
+      <wsdl:input message="tns:ExpireSecretHttpGetIn" />
+      <wsdl:output message="tns:ExpireSecretHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ImportXML">
+      <wsdl:input message="tns:ImportXMLHttpGetIn" />
+      <wsdl:output message="tns:ImportXMLHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretAudit">
+      <wsdl:input message="tns:GetSecretAuditHttpGetIn" />
+      <wsdl:output message="tns:GetSecretAuditHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAgents">
+      <wsdl:input message="tns:GetAgentsHttpGetIn" />
+      <wsdl:output message="tns:GetAgentsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AssignAgent">
+      <wsdl:input message="tns:AssignAgentHttpGetIn" />
+      <wsdl:output message="tns:AssignAgentHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckIn">
+      <wsdl:input message="tns:CheckInHttpGetIn" />
+      <wsdl:output message="tns:CheckInHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckInByKey">
+      <wsdl:input message="tns:CheckInByKeyHttpGetIn" />
+      <wsdl:output message="tns:CheckInByKeyHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="SSWebServiceHttpPost">
+    <wsdl:operation name="Authenticate">
+      <wsdl:input message="tns:AuthenticateHttpPostIn" />
+      <wsdl:output message="tns:AuthenticateHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateRADIUS">
+      <wsdl:input message="tns:AuthenticateRADIUSHttpPostIn" />
+      <wsdl:output message="tns:AuthenticateRADIUSHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetTokenIsValid">
+      <wsdl:input message="tns:GetTokenIsValidHttpPostIn" />
+      <wsdl:output message="tns:GetTokenIsValidHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretLegacy">
+      <wsdl:input message="tns:GetSecretLegacyHttpPostIn" />
+      <wsdl:output message="tns:GetSecretLegacyHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetCheckOutStatus">
+      <wsdl:input message="tns:GetCheckOutStatusHttpPostIn" />
+      <wsdl:output message="tns:GetCheckOutStatusHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ChangePassword">
+      <wsdl:input message="tns:ChangePasswordHttpPostIn" />
+      <wsdl:output message="tns:ChangePasswordHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchWebPasswordsForUrl">
+      <wsdl:input message="tns:SearchWebPasswordsForUrlHttpPostIn" />
+      <wsdl:output message="tns:SearchWebPasswordsForUrlHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretsByFieldValue">
+      <wsdl:input message="tns:GetSecretsByFieldValueHttpPostIn" />
+      <wsdl:output message="tns:GetSecretsByFieldValueHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFieldValue">
+      <wsdl:input message="tns:SearchSecretsByFieldValueHttpPostIn" />
+      <wsdl:output message="tns:SearchSecretsByFieldValueHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFavorites">
+      <wsdl:input message="tns:GetFavoritesHttpPostIn" />
+      <wsdl:output message="tns:GetFavoritesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateIsFavorite">
+      <wsdl:input message="tns:UpdateIsFavoriteHttpPostIn" />
+      <wsdl:output message="tns:UpdateIsFavoriteHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AddSecret">
+      <wsdl:input message="tns:AddSecretHttpPostIn" />
+      <wsdl:output message="tns:AddSecretHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSecret">
+      <wsdl:input message="tns:GetNewSecretHttpPostIn" />
+      <wsdl:output message="tns:GetNewSecretHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplateFields">
+      <wsdl:input message="tns:GetSecretTemplateFieldsHttpPostIn" />
+      <wsdl:output message="tns:GetSecretTemplateFieldsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplates">
+      <wsdl:input message="tns:GetSecretTemplatesHttpPostIn" />
+      <wsdl:output message="tns:GetSecretTemplatesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GeneratePassword">
+      <wsdl:input message="tns:GeneratePasswordHttpPostIn" />
+      <wsdl:output message="tns:GeneratePasswordHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeactivateSecret">
+      <wsdl:input message="tns:DeactivateSecretHttpPostIn" />
+      <wsdl:output message="tns:DeactivateSecretHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <wsdl:input message="tns:VersionGetHttpPostIn" />
+      <wsdl:output message="tns:VersionGetHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderGet">
+      <wsdl:input message="tns:FolderGetHttpPostIn" />
+      <wsdl:output message="tns:FolderGetHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderGetAllChildren">
+      <wsdl:input message="tns:FolderGetAllChildrenHttpPostIn" />
+      <wsdl:output message="tns:FolderGetAllChildrenHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FolderCreate">
+      <wsdl:input message="tns:FolderCreateHttpPostIn" />
+      <wsdl:output message="tns:FolderCreateHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchFolders">
+      <wsdl:input message="tns:SearchFoldersHttpPostIn" />
+      <wsdl:output message="tns:SearchFoldersHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachment">
+      <wsdl:input message="tns:DownloadFileAttachmentHttpPostIn" />
+      <wsdl:output message="tns:DownloadFileAttachmentHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachmentByItemId">
+      <wsdl:input message="tns:DownloadFileAttachmentByItemIdHttpPostIn" />
+      <wsdl:output message="tns:DownloadFileAttachmentByItemIdHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachment">
+      <wsdl:input message="tns:UploadFileAttachmentHttpPostIn" />
+      <wsdl:output message="tns:UploadFileAttachmentHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachmentByItemId">
+      <wsdl:input message="tns:UploadFileAttachmentByItemIdHttpPostIn" />
+      <wsdl:output message="tns:UploadFileAttachmentByItemIdHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ExpireSecret">
+      <wsdl:input message="tns:ExpireSecretHttpPostIn" />
+      <wsdl:output message="tns:ExpireSecretHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ImportXML">
+      <wsdl:input message="tns:ImportXMLHttpPostIn" />
+      <wsdl:output message="tns:ImportXMLHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretAudit">
+      <wsdl:input message="tns:GetSecretAuditHttpPostIn" />
+      <wsdl:output message="tns:GetSecretAuditHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAgents">
+      <wsdl:input message="tns:GetAgentsHttpPostIn" />
+      <wsdl:output message="tns:GetAgentsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="AssignAgent">
+      <wsdl:input message="tns:AssignAgentHttpPostIn" />
+      <wsdl:output message="tns:AssignAgentHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckIn">
+      <wsdl:input message="tns:CheckInHttpPostIn" />
+      <wsdl:output message="tns:CheckInHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckInByKey">
+      <wsdl:input message="tns:CheckInByKeyHttpPostIn" />
+      <wsdl:output message="tns:CheckInByKeyHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SSWebServiceSoap" type="tns:SSWebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Authenticate">
+      <soap:operation soapAction="urn:thesecretserver.com/Authenticate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateRADIUS">
+      <soap:operation soapAction="urn:thesecretserver.com/AuthenticateRADIUS" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTokenIsValid">
+      <soap:operation soapAction="urn:thesecretserver.com/GetTokenIsValid" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretLegacy">
+      <soap:operation soapAction="urn:thesecretserver.com/GetSecretLegacy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecret">
+      <soap:operation soapAction="urn:thesecretserver.com/GetSecret" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCheckOutStatus">
+      <soap:operation soapAction="urn:thesecretserver.com/GetCheckOutStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePassword">
+      <soap:operation soapAction="urn:thesecretserver.com/ChangePassword" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchWebPasswordsForUrl">
+      <soap:operation soapAction="urn:thesecretserver.com/SearchWebPasswordsForUrl" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretsByFieldValue">
+      <soap:operation soapAction="urn:thesecretserver.com/GetSecretsByFieldValue" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFieldValue">
+      <soap:operation soapAction="urn:thesecretserver.com/SearchSecretsByFieldValue" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <soap:operation soapAction="urn:thesecretserver.com/AddUser" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecrets">
+      <soap:operation soapAction="urn:thesecretserver.com/SearchSecrets" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFolder">
+      <soap:operation soapAction="urn:thesecretserver.com/SearchSecretsByFolder" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFavorites">
+      <soap:operation soapAction="urn:thesecretserver.com/GetFavorites" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateIsFavorite">
+      <soap:operation soapAction="urn:thesecretserver.com/UpdateIsFavorite" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddSecret">
+      <soap:operation soapAction="urn:thesecretserver.com/AddSecret" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddNewSecret">
+      <soap:operation soapAction="urn:thesecretserver.com/AddNewSecret" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSecret">
+      <soap:operation soapAction="urn:thesecretserver.com/GetNewSecret" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplateFields">
+      <soap:operation soapAction="urn:thesecretserver.com/GetSecretTemplateFields" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSecret">
+      <soap:operation soapAction="urn:thesecretserver.com/UpdateSecret" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplates">
+      <soap:operation soapAction="urn:thesecretserver.com/GetSecretTemplates" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GeneratePassword">
+      <soap:operation soapAction="urn:thesecretserver.com/GeneratePassword" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeactivateSecret">
+      <soap:operation soapAction="urn:thesecretserver.com/DeactivateSecret" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <soap:operation soapAction="urn:thesecretserver.com/VersionGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGet">
+      <soap:operation soapAction="urn:thesecretserver.com/FolderGet" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderUpdate">
+      <soap:operation soapAction="urn:thesecretserver.com/FolderUpdate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGetAllChildren">
+      <soap:operation soapAction="urn:thesecretserver.com/FolderGetAllChildren" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderCreate">
+      <soap:operation soapAction="urn:thesecretserver.com/FolderCreate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFolders">
+      <soap:operation soapAction="urn:thesecretserver.com/SearchFolders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachment">
+      <soap:operation soapAction="urn:thesecretserver.com/DownloadFileAttachment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachmentByItemId">
+      <soap:operation soapAction="urn:thesecretserver.com/DownloadFileAttachmentByItemId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachment">
+      <soap:operation soapAction="urn:thesecretserver.com/UploadFileAttachment" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachmentByItemId">
+      <soap:operation soapAction="urn:thesecretserver.com/UploadFileAttachmentByItemId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExpireSecret">
+      <soap:operation soapAction="urn:thesecretserver.com/ExpireSecret" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetCheckOutEnabled">
+      <soap:operation soapAction="urn:thesecretserver.com/SetCheckOutEnabled" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ImportXML">
+      <soap:operation soapAction="urn:thesecretserver.com/ImportXML" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretAudit">
+      <soap:operation soapAction="urn:thesecretserver.com/GetSecretAudit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAgents">
+      <soap:operation soapAction="urn:thesecretserver.com/GetAgents" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AssignAgent">
+      <soap:operation soapAction="urn:thesecretserver.com/AssignAgent" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckIn">
+      <soap:operation soapAction="urn:thesecretserver.com/CheckIn" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddSecretCustomAudit">
+      <soap:operation soapAction="urn:thesecretserver.com/AddSecretCustomAudit" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSecretPermission">
+      <soap:operation soapAction="urn:thesecretserver.com/UpdateSecretPermission" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckInByKey">
+      <soap:operation soapAction="urn:thesecretserver.com/CheckInByKey" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SSWebServiceSoap12" type="tns:SSWebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Authenticate">
+      <soap12:operation soapAction="urn:thesecretserver.com/Authenticate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateRADIUS">
+      <soap12:operation soapAction="urn:thesecretserver.com/AuthenticateRADIUS" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTokenIsValid">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetTokenIsValid" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretLegacy">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetSecretLegacy" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecret">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetSecret" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCheckOutStatus">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetCheckOutStatus" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePassword">
+      <soap12:operation soapAction="urn:thesecretserver.com/ChangePassword" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchWebPasswordsForUrl">
+      <soap12:operation soapAction="urn:thesecretserver.com/SearchWebPasswordsForUrl" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretsByFieldValue">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetSecretsByFieldValue" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFieldValue">
+      <soap12:operation soapAction="urn:thesecretserver.com/SearchSecretsByFieldValue" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddUser">
+      <soap12:operation soapAction="urn:thesecretserver.com/AddUser" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecrets">
+      <soap12:operation soapAction="urn:thesecretserver.com/SearchSecrets" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFolder">
+      <soap12:operation soapAction="urn:thesecretserver.com/SearchSecretsByFolder" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFavorites">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetFavorites" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateIsFavorite">
+      <soap12:operation soapAction="urn:thesecretserver.com/UpdateIsFavorite" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddSecret">
+      <soap12:operation soapAction="urn:thesecretserver.com/AddSecret" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddNewSecret">
+      <soap12:operation soapAction="urn:thesecretserver.com/AddNewSecret" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSecret">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetNewSecret" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplateFields">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetSecretTemplateFields" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSecret">
+      <soap12:operation soapAction="urn:thesecretserver.com/UpdateSecret" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplates">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetSecretTemplates" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GeneratePassword">
+      <soap12:operation soapAction="urn:thesecretserver.com/GeneratePassword" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeactivateSecret">
+      <soap12:operation soapAction="urn:thesecretserver.com/DeactivateSecret" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <soap12:operation soapAction="urn:thesecretserver.com/VersionGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGet">
+      <soap12:operation soapAction="urn:thesecretserver.com/FolderGet" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderUpdate">
+      <soap12:operation soapAction="urn:thesecretserver.com/FolderUpdate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGetAllChildren">
+      <soap12:operation soapAction="urn:thesecretserver.com/FolderGetAllChildren" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderCreate">
+      <soap12:operation soapAction="urn:thesecretserver.com/FolderCreate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFolders">
+      <soap12:operation soapAction="urn:thesecretserver.com/SearchFolders" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachment">
+      <soap12:operation soapAction="urn:thesecretserver.com/DownloadFileAttachment" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachmentByItemId">
+      <soap12:operation soapAction="urn:thesecretserver.com/DownloadFileAttachmentByItemId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachment">
+      <soap12:operation soapAction="urn:thesecretserver.com/UploadFileAttachment" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachmentByItemId">
+      <soap12:operation soapAction="urn:thesecretserver.com/UploadFileAttachmentByItemId" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExpireSecret">
+      <soap12:operation soapAction="urn:thesecretserver.com/ExpireSecret" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SetCheckOutEnabled">
+      <soap12:operation soapAction="urn:thesecretserver.com/SetCheckOutEnabled" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ImportXML">
+      <soap12:operation soapAction="urn:thesecretserver.com/ImportXML" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretAudit">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetSecretAudit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAgents">
+      <soap12:operation soapAction="urn:thesecretserver.com/GetAgents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AssignAgent">
+      <soap12:operation soapAction="urn:thesecretserver.com/AssignAgent" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckIn">
+      <soap12:operation soapAction="urn:thesecretserver.com/CheckIn" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddSecretCustomAudit">
+      <soap12:operation soapAction="urn:thesecretserver.com/AddSecretCustomAudit" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateSecretPermission">
+      <soap12:operation soapAction="urn:thesecretserver.com/UpdateSecretPermission" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckInByKey">
+      <soap12:operation soapAction="urn:thesecretserver.com/CheckInByKey" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SSWebServiceHttpGet" type="tns:SSWebServiceHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="Authenticate">
+      <http:operation location="/Authenticate" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateRADIUS">
+      <http:operation location="/AuthenticateRADIUS" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTokenIsValid">
+      <http:operation location="/GetTokenIsValid" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretLegacy">
+      <http:operation location="/GetSecretLegacy" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCheckOutStatus">
+      <http:operation location="/GetCheckOutStatus" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePassword">
+      <http:operation location="/ChangePassword" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchWebPasswordsForUrl">
+      <http:operation location="/SearchWebPasswordsForUrl" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretsByFieldValue">
+      <http:operation location="/GetSecretsByFieldValue" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFieldValue">
+      <http:operation location="/SearchSecretsByFieldValue" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFavorites">
+      <http:operation location="/GetFavorites" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateIsFavorite">
+      <http:operation location="/UpdateIsFavorite" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddSecret">
+      <http:operation location="/AddSecret" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSecret">
+      <http:operation location="/GetNewSecret" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplateFields">
+      <http:operation location="/GetSecretTemplateFields" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplates">
+      <http:operation location="/GetSecretTemplates" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GeneratePassword">
+      <http:operation location="/GeneratePassword" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeactivateSecret">
+      <http:operation location="/DeactivateSecret" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <http:operation location="/VersionGet" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGet">
+      <http:operation location="/FolderGet" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGetAllChildren">
+      <http:operation location="/FolderGetAllChildren" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderCreate">
+      <http:operation location="/FolderCreate" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFolders">
+      <http:operation location="/SearchFolders" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachment">
+      <http:operation location="/DownloadFileAttachment" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachmentByItemId">
+      <http:operation location="/DownloadFileAttachmentByItemId" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachment">
+      <http:operation location="/UploadFileAttachment" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachmentByItemId">
+      <http:operation location="/UploadFileAttachmentByItemId" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExpireSecret">
+      <http:operation location="/ExpireSecret" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ImportXML">
+      <http:operation location="/ImportXML" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretAudit">
+      <http:operation location="/GetSecretAudit" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAgents">
+      <http:operation location="/GetAgents" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AssignAgent">
+      <http:operation location="/AssignAgent" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckIn">
+      <http:operation location="/CheckIn" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckInByKey">
+      <http:operation location="/CheckInByKey" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SSWebServiceHttpPost" type="tns:SSWebServiceHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="Authenticate">
+      <http:operation location="/Authenticate" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AuthenticateRADIUS">
+      <http:operation location="/AuthenticateRADIUS" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetTokenIsValid">
+      <http:operation location="/GetTokenIsValid" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretLegacy">
+      <http:operation location="/GetSecretLegacy" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCheckOutStatus">
+      <http:operation location="/GetCheckOutStatus" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ChangePassword">
+      <http:operation location="/ChangePassword" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchWebPasswordsForUrl">
+      <http:operation location="/SearchWebPasswordsForUrl" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretsByFieldValue">
+      <http:operation location="/GetSecretsByFieldValue" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchSecretsByFieldValue">
+      <http:operation location="/SearchSecretsByFieldValue" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetFavorites">
+      <http:operation location="/GetFavorites" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateIsFavorite">
+      <http:operation location="/UpdateIsFavorite" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AddSecret">
+      <http:operation location="/AddSecret" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetNewSecret">
+      <http:operation location="/GetNewSecret" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplateFields">
+      <http:operation location="/GetSecretTemplateFields" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretTemplates">
+      <http:operation location="/GetSecretTemplates" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GeneratePassword">
+      <http:operation location="/GeneratePassword" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeactivateSecret">
+      <http:operation location="/DeactivateSecret" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VersionGet">
+      <http:operation location="/VersionGet" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGet">
+      <http:operation location="/FolderGet" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderGetAllChildren">
+      <http:operation location="/FolderGetAllChildren" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FolderCreate">
+      <http:operation location="/FolderCreate" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFolders">
+      <http:operation location="/SearchFolders" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachment">
+      <http:operation location="/DownloadFileAttachment" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DownloadFileAttachmentByItemId">
+      <http:operation location="/DownloadFileAttachmentByItemId" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachment">
+      <http:operation location="/UploadFileAttachment" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UploadFileAttachmentByItemId">
+      <http:operation location="/UploadFileAttachmentByItemId" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ExpireSecret">
+      <http:operation location="/ExpireSecret" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ImportXML">
+      <http:operation location="/ImportXML" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecretAudit">
+      <http:operation location="/GetSecretAudit" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetAgents">
+      <http:operation location="/GetAgents" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AssignAgent">
+      <http:operation location="/AssignAgent" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckIn">
+      <http:operation location="/CheckIn" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckInByKey">
+      <http:operation location="/CheckInByKey" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SSWebService">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Webservice for standard integration.</wsdl:documentation>
+    <wsdl:port name="SSWebServiceSoap" binding="tns:SSWebServiceSoap">
+      <soap:address location="https://www.secretserveronline.com/webservices/SSWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SSWebServiceSoap12" binding="tns:SSWebServiceSoap12">
+      <soap12:address location="https://www.secretserveronline.com/webservices/SSWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SSWebServiceHttpGet" binding="tns:SSWebServiceHttpGet">
+      <http:address location="https://www.secretserveronline.com/webservices/SSWebService.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SSWebServiceHttpPost" binding="tns:SSWebServiceHttpPost">
+      <http:address location="https://www.secretserveronline.com/webservices/SSWebService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
