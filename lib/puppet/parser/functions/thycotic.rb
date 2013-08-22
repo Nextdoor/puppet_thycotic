@@ -87,7 +87,9 @@ class Thycotic
     # including the password/username that were supplied. Debug mode is
     # dangerous and meant to only be used during troubleshooting.
     @params.each do |k,v|
-      puts "Initialization params: #{k} => #{v}" if @params[:debug]
+      if k != :password
+        puts "Initialization params: #{k} => #{v}" if @params[:debug]
+      end
     end
 
     # Make sure that the required parameters WERE supplied
