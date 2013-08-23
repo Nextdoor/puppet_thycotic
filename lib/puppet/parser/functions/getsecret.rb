@@ -32,7 +32,8 @@ require 'parseconfig'
 require File.join(File.dirname(__FILE__), 'thycotic.rb')
 
 # We will store our single Thycotic object here once its created
-$thycotic = nil
+# in an INSTANCE scoped variable.
+@thycotic = nil
 
 # Store a reference to where we loaded our last configuration file
 # from. This is used to re-configure our Thycotic object in the event
@@ -130,21 +131,25 @@ module Puppet::Parser::Functions
       return 'UNIT_TEST_RESULTS'
     end
 
-    # Figure out if the last time that the $thycotic object was created it used
+    # Figure out if the last time that the @thycotic object was created it used
     # the same config file as the one that was just now supplied. If they are
     # different, then wipe out our object and let it get recreated. This allows
     # for multiple configuration files to be used at the expense of a small
-    # amount of performance (recreation of the $thycotic Object below)
+    # amount of performance (recreation of the @thycotic Object below)
     if not config.nil? and config != $last_thycotic_config_file
-      $thycotic = nil
+      @thycotic = nil
     end
 
     # Create our Thycotic object if it doesn't already exist
     # Look for our config file in a few locations (in order):
-    $thycotic ||= init(config)
+    begin
+      @thycotic ||= init(config)
+    rescue Exception=>e
+      raise Puppet::ParseError, "Could not initialize Thycotic object: #{e}"
+    end
 
     # Now request our secret
-    secret = $thycotic.getSecret(secret_id)
+    secret = @thycotic.getSecret(secret_id)
 
     # Walk through the returned elements of the hash, and look for the one we want.
     if secret.has_key?(secret_name)
