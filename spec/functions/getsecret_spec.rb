@@ -1,7 +1,12 @@
 require 'spec_helper'
 require 'pathname'
 
+
 describe 'getsecret' do
+  # Uncomment to enable debug logging
+  #Puppet::Util::Log.level = :debug
+  #Puppet::Util::Log.newdestination(:console)
+
   it "should exist" do
     Puppet::Parser::Functions.function("getsecret").should == "function_getsecret"
   end
