@@ -36,6 +36,8 @@ require 'filecache'
 require 'timeout'
 require 'yaml'
 require 'base64'
+require 'puppet'
+
 
 # Loading the soap4r gem. This gem overrides the way SSL errors are
 # handled in the SOAP code.
@@ -88,7 +90,7 @@ class Thycotic
     # dangerous and meant to only be used during troubleshooting.
     @params.each do |k,v|
       if k != :password
-        puts "Initialization params: #{k} => #{v}" if @params[:debug]
+        log("Initialization params: #{k} => #{v}")
       end
     end
 
@@ -101,16 +103,16 @@ class Thycotic
 
     # Make sure that a short-term and long-term file cache is available.
     if not @params[:cache_path].nil?
-      puts "Initializing short-term cache in" \
+      log("Initializing short-term cache in" \
            " #{@params[:cache_path]}/#{SHORT_TERM_CACHE_NAME} with timeout" \
-           " #{SHORT_TERM_CACHE_TIMEOUT} seconds" if @params[:debug]
+           " #{SHORT_TERM_CACHE_TIMEOUT} seconds")
       @cache = FileCache.new(SHORT_TERM_CACHE_NAME,
                              @params[:cache_path],
                              SHORT_TERM_CACHE_TIMEOUT)
 
-      puts "Initializing long-term cache in" \
+      log("Initializing long-term cache in" \
            " #{@params[:cache_path]}/#{LONG_TERM_CACHE_NAME} with timeout" \
-           " #{LONG_TERM_CACHE_TIMEOUT} seconds" if @params[:debug]
+           " #{LONG_TERM_CACHE_TIMEOUT} seconds")
       @long_term_cache = FileCache.new(LONG_TERM_CACHE_NAME,
                                        @params[:cache_path],
                                        LONG_TERM_CACHE_TIMEOUT)
@@ -119,66 +121,6 @@ class Thycotic
     # Initialize the SOAP driver -- all uses of the driver call getDriver()
     # but this pre-initializes it at the first use of this object.
     getDriver()
-  end
-
-  def getFile(secretid, fileid)
-    # This method retreives file contents from the Secret Server with
-    # the supplied Secret ID and FileID. This is meant to be used
-    # as an internal method by the getSecret() method.
-    #
-    # * *Args*:
-    #   - +secretid+ -> The secret ID that the file belongs to
-    #   - +fileid+ -> The file ID to download
-    #
-    # * *Returns*:
-    #   - String containing the ocntents of the downloaded file
-    #
-    # * *Raises*:
-    #   - An exception if the File cannot be downloaded for some reason
-    #     after 3 retries.
-    #
-    tries = 0
-    max_tries = 3
-    begin
-      # Parameters for our SOAP request
-      params = {
-        :token        => getToken(),
-        :secretId     => secretid,
-        :secretItemId => fileid,
-      }
-      resp = getDriver().DownloadFileAttachmentByItemId(params)
-
-      # First find out if we errored out for any reason. If so, fail to
-      # return a result and instead raise an exception.
-      error = resp['DownloadFileAttachmentByItemIdResult']['Errors']['string']
-      if error.to_s == 'File attachment not found.'
-        # There is no atual data to return, but this is not a bad thing. There simply is no
-        # key... so return false.
-        puts "SecretItemId #{fileid} empty, returning empty string." if @params[:debug]
-        return ''
-      end
-
-      if not error.nil?
-        raise "Error retrieving SecretItemId #{fileid}, Secret #{secretid}: " \
-              "#{error}"
-      end
-
-      # Return the Base64 decoded contents of the FileAttachment data
-      encoded_contents = resp['DownloadFileAttachmentByItemIdResult']['FileAttachment']
-      decoded_contents = Base64.decode64(encoded_contents).to_s
-      puts "SecretItemId #{fileid} file retrieved...\n" if @params[:debug]
-      return decoded_contents
-    rescue Exception=>e
-      puts "SecretItemId #{fileid} retrieval failed: #{e}"
-      if tries < max_tries
-        tries = tries + 1
-        puts "(#{tries}/#{max_tries}) Trying again..."
-        retry
-      end
-
-      # If we tried too many times, raise an exception.
-      raise "SecretItemId #{fileid} retrieval failed too many times: #{e}"
-    end
   end
 
   def getSecret(secretid)
@@ -201,20 +143,137 @@ class Thycotic
     # item exists in the cache already. Wrap this in a begin/rescue block
     # so that if the short term cache is failing for some reason, we still
     # attempt to use the API services.
-    begin
-      if not @cache.nil? and not @cache.get(secretid).nil?
-        # The item was found in the cache...
-        puts "Found Secret ID #{secretid} in short term cache." if @params[:debug]
-        return YAML::load(@cache.get(secretid))
-      end
-    rescue Exception =>e
-      puts "Short-term cache access failed (will try the API...): #{e}"
+    short_term_cache_value = getSecretFromCache(@cache, secretid)
+    if not short_term_cache_value.nil?
+      return short_term_cache_value
     end
 
-    # Get the item from API... Wrap the entire thing in a big begin/rescue
-    # block and leverage the long_term cache if necessary.
+    # Get the secret from the API services. If it returns, then store it
+    # in our short/long term caches.
+    secret_hash = getSecretFromAPI(secretid)
+    if not secret_hash.nil?
+      # If the cache is enabled, then cache the secret_hash data.
+      #
+      # This operations is not critical to the function of the plugin, so if it
+      # fails we simply throw a warning and move on.
+      saveSecretToCache(@cache,secretid,secret_hash)
+      saveSecretToCache(@long_term_cache,secretid,secret_hash)
+
+      # Now return the secret value
+      return secret_hash
+    end
+
+    # If we got here and secret_cache is still nil, then its not available from
+    # the API or the short term cache. Attempt to get it from the long term
+    # cache.
+    log("Secret ID #{secretid} unavailable from API. Checking long term " \
+         "cache. Error was: : #{e}")
+    long_term_cache_value = getSecretFromCache(@long_term_cache, secretid)
+    if not long_term_cache_value.nil?
+      log("Found Secret ID #{secretid} in long term cache.\n")
+      return long_term_cache_value
+    end
+
+    # Finally, if we got here then we raise an exception. We couldn't get the
+    # secret value from any of the sources.
+    raise "Could not retrieve secret from short or long term cache, " \
+          "or the API services. Please troubleshoot: #{e}"
+  end
+
+  private
+
+  def getSecretFromCache(cache, secretid)
+    # Returns a secret from a supplied cache object. Handles any exceptions
+    # and returns either the secret, or a Nil value.
+    #
+    # * *Args*:
+    #   - +cache+ -> The filecache object to search
+    #   - +secretid+ -> The secretid to look for
+    #
+    # * *Returns*:
+    #   - nil: If no secret was found
+    #   - Hash containing the secret from the filecache object
+    #
+    
+    # Quick check. If the supplied cache object is nil, or the secret
+    # id is nil, then just return nil.
+    if cache.nil? or secretid.nil?
+      return nil
+    end
+
+    # Grab the name of the cache object for logging
+    cache_name = cache.instance_variable_get("@root")
+
+    # Attempt to get the Secret ID from the cache now
     begin
-      # Attempt to get the secret from Thycotic directly
+      return YAML::load(cache.get(secretid))
+    rescue Exception =>e
+      log("Secret ID #{secretid} not found in #{cache_name}.")
+      return nil
+    end
+  end
+
+  def saveSecretToCache(cache, secretid, secretvalue)
+    # Saves a supplied secret to the cache. Handles any exceptions and
+    # returns quietly. Will output debug logging during a failure, but
+    # thats it.
+    #
+    # * *Args*:
+    #   - +cache+ -> The filecache object to write to
+    #   - +secretid+ -> The secret ID number to use as the key
+    #   - +Secretvalue+ -> The secret value to store
+    #   
+
+    # Make sure that the three values were supplid. If any are Nil,
+    # log and exit safely.
+    if secretid.nil?
+      log("Secret ID cannot be Nil!")
+      return
+    end
+    if cache.nil?
+      log("Caching disabled, not storing Secret ID #{secretid}")
+      return
+    end
+    if secretvalue.nil?
+      log("Missing value for Secret ID #{secretid}. Not storing.")
+      return
+    end
+
+    # Grab the name of the cache object for logging
+    cache_name = cache.instance_variable_get("@root")
+
+    # Now try to save the secret to the cache. If it fails, just return.
+    begin
+      log("Saving Secret ID '#{secretid}' to #{cache_name}...\n")
+      cache.set(secretid,secretvalue.to_yaml)
+    rescue Exception =>e
+      log("Failed saving Secret ID #{secretid} to #{cache_name}: #{e}.")
+    end
+  end
+
+  def getSecretFromAPI(secretid)
+    # Contacts the API service and retreives the secret hash. Handles all
+    # exceptions and either returns a Nil value, or the hash data from
+    # the API.
+    #
+    # *Args*:
+    #   - +secretid+ -> Secret ID to retrieve
+    #
+    # * *Returns*:
+    #   - Hash containing key/value pairs from the secret retrieved looking like:
+    #       hash = {
+    #         "<secret field name>" = "<secret content>"
+    #         "<secret field name>" = "<secret content>"
+    #         "<secret field name>" = "<secret content>"
+    #       }
+    #
+    # * *Raises*:
+    #   - An exception in the event that the secret cannot be retrieved
+    #
+   
+    # This whole thing is wrapped in a single Begin/Rescue loop because the failure
+    # handling is the same no matter what. Return Nil and throw a log message.
+    begin
       params = {
         :token    => getToken(),
         :secretId => secretid,
@@ -264,51 +323,92 @@ class Thycotic
           # held a value, so it must be bogus return data. Even an empty
           # secret will return a blank string.
           if not content.nil?
-            puts "Got secret content for Secret ID " \
-                 "(#{secretid}/#{s['FieldDisplayName']})...\n" if @params[:debug]
+            log("Got secret content for Secret ID " \
+                 "(#{secretid}/#{s['FieldDisplayName']})...\n")
             secret_hash[s['FieldDisplayName']] = content
           end
         end
       end
-
-      # If no secret data was returned at all, something bad happened
-      if secret_hash.nil?
-        raise "Retrieved secret was 'nil'. Checking Long Term Cache."
-      end
-    rescue Exception=>e
-      # Last shot.. item was not in our regular cache, AND we couldn't get it
-      # from the API service, so lets attempt to find it in our long term cache.
-      puts "Secret ID #{secretid} unavailable from API. Checking long term " \
-           "cache. Error was: : #{e}" if @params[:debug]
-      begin
-        secret_hash = YAML::load(@long_term_cache.get(secretid))
-        # We return here so that we don't take our value from the long_term cache
-        # and store it in the short_term cache below. Pulling from our long_term
-        # cache is our last resort.
-        puts "Found Secret ID #{secretid} in long term cache.\n"
-        return secret_hash
-      rescue Exception =>e
-        raise "Could not retrieve secret from short or long term cache, " \
-              "or the API services. Please troubleshoot: #{e}"
-      end
-    end
-
-    # If the cache is enabled, then cache the secret_hash data.
-    #
-    # This operations is not critical to the function of the plugin, so if it
-    # fails we simply throw a warning and move on.
-    begin
-      if not @cache.nil? and not @long_term_cache.nil?
-        puts "Caching Secret ID '#{secretid}'...\n" if @params[:debug]
-        @cache.set(secretid,secret_hash.to_yaml)
-        @long_term_cache.set(secretid,secret_hash.to_yaml)
-      end
     rescue Exception =>e
-      puts "Could not cache #{secretid}: #{e}." if @params[:debug]
+      log("Error retrieving Secret ID #{secretid} from API service: #{e}")
+      return Nil
     end
 
-    # If we made it here, return the secret_hash data
+    # If we got here, we got the secret. Returning it
     return secret_hash
+  end
+
+  def getFile(secretid, fileid)
+    # This method retreives file contents from the Secret Server with
+    # the supplied Secret ID and FileID. This is meant to be used
+    # as an internal method by the getSecret() method.
+    #
+    # * *Args*:
+    #   - +secretid+ -> The secret ID that the file belongs to
+    #   - +fileid+ -> The file ID to download
+    #
+    # * *Returns*:
+    #   - String containing the ocntents of the downloaded file
+    #
+    # * *Raises*:
+    #   - An exception if the File cannot be downloaded for some reason
+    #     after 3 retries.
+    #
+    tries = 0
+    max_tries = 3
+    begin
+      # Parameters for our SOAP request
+      params = {
+        :token        => getToken(),
+        :secretId     => secretid,
+        :secretItemId => fileid,
+      }
+      resp = getDriver().DownloadFileAttachmentByItemId(params)
+
+      # First find out if we errored out for any reason. If so, fail to
+      # return a result and instead raise an exception.
+      error = resp['DownloadFileAttachmentByItemIdResult']['Errors']['string']
+      if error.to_s == 'File attachment not found.'
+        # There is no atual data to return, but this is not a bad thing. There simply is no
+        # key... so return false.
+        log("SecretItemId #{fileid} empty, returning empty string.")
+        return ''
+      end
+
+      if not error.nil?
+        raise "Error retrieving SecretItemId #{fileid}, Secret #{secretid}: " \
+              "#{error}"
+      end
+
+      # Return the Base64 decoded contents of the FileAttachment data
+      encoded_contents = resp['DownloadFileAttachmentByItemIdResult']['FileAttachment']
+      decoded_contents = Base64.decode64(encoded_contents).to_s
+      log("SecretItemId #{fileid} file retrieved...\n")
+      return decoded_contents
+    rescue Exception=>e
+      log("SecretItemId #{fileid} retrieval failed: #{e}")
+      if tries < max_tries
+        tries = tries + 1
+        log("(#{tries}/#{max_tries}) Trying again...")
+        retry
+      end
+
+      # If we tried too many times, raise an exception.
+      raise "SecretItemId #{fileid} retrieval failed too many times: #{e}"
+    end
+  end
+
+  def log(msg)
+    # Reports a log messsage if debugging is enabled
+    #
+    # * *Args*:
+    #   - +msg+ -> String contents of the message to report
+    #
+    if @params[:debug]
+      Puppet.warning(msg)
+    else
+      Puppet.debug(msg)
+    end
   end
 
   def getToken()
@@ -344,10 +444,10 @@ class Thycotic
       # Now, check if the token is valid or not...
       resp = getDriver().GetTokenIsValid(:token => @token)
       if resp['GetTokenIsValidResult']['Errors']['string'].nil?
-        puts "Found valid token" if @params[:debug]
+        log("Found valid token")
         return @token
       else
-        puts "Found expired token in cache, fetching new..." if @params[:debug]
+        log("Found expired token in cache, fetching new...")
         raise
       end
     rescue
@@ -364,16 +464,15 @@ class Thycotic
       begin
         data = getDriver().Authenticate(parameters)
         token = data['AuthenticateResult']['Token']
-        puts "Fetched new token #{token}..." if @params[:debug]
+        log("Fetched new token #{token}...")
       rescue Exception=>e
-        puts "Could not retrieve authentication token: #{e}"
+        log("Could not retrieve authentication token: #{e}")
         if tries < max_tries
           tries = tries + 1
-          puts "#{tries}/#{max_tries}) Trying again..."
+          log("#{tries}/#{max_tries}) Trying again...")
           retry
         end
-        puts 'Failed to retrieve token.'
-        raise
+        raise 'Failed to retrieve token.'
       end
 
       # Save the token to our local object to prevent getting it again
@@ -381,7 +480,7 @@ class Thycotic
 
       # Before returning the token, cache it (if there is a local cache)
       if not @cache.nil?
-        puts "Saving token to cache..." if @params[:debug]
+        log("Saving token to cache...")
         @cache.set('token', @token)
       end
 
@@ -415,13 +514,13 @@ class Thycotic
       @driver = SOAP::WSDLDriverFactory.new(@params[:serviceurl]).create_rpc_driver
       return @driver
     rescue Exception=>e
-      puts "Could not create SOAP Driver from URL #{@params[:serviceurl]}: #{e}"
+      log("Could not create SOAP Driver from URL #{@params[:serviceurl]}: #{e}")
       if tries < max_tries
         tries = tries + 1
-        puts "(#{tries}/#{max_tries}) Trying again..."
+        log("(#{tries}/#{max_tries}) Trying again...")
         retry
       end
-      puts "Failed to log into #{@params[:serviceurl]}. Returning 'nil' object for now."
+      log("Failed to log into #{@params[:serviceurl]}. Returning 'nil' object for now.")
       return nil
     end
   end
