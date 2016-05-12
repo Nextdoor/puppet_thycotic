@@ -540,6 +540,12 @@ class Thycotic
     max_tries = 3
     begin
       @driver = SOAP::WSDLDriverFactory.new(@params[:serviceurl]).create_rpc_driver
+
+      # Increase the timeout on the http module when making calls to the secret server
+      @driver.options["protocol.http.connect_timeout"] =  60 # [sec]
+      @driver.options["protocol.http.send_timeout"]    = 120 # [sec]
+      @driver.options["protocol.http.receive_timeout"] =  60 # [sec]
+
       return @driver
     rescue Exception=>e
       log("Could not create SOAP Driver from URL #{@params[:serviceurl]}: #{e}")
