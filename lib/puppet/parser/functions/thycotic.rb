@@ -341,6 +341,8 @@ class Thycotic
             content = s['Value']
           end
 
+          content = sanitize_content(content)
+
           # If the content is 'nil', then the secret cannot possibly have
           # held a value, so it must be bogus return data. Even an empty
           # secret will return a blank string.
@@ -424,6 +426,15 @@ class Thycotic
       # If we tried too many times, raise an exception.
       raise "SecretItemId #{fileid} retrieval failed too many times: #{e}"
     end
+  end
+
+  def sanitize_content(content)
+    # Return only characters in the string which are not zero-width space
+    #
+    # * *Args*:
+    #   - +content+ -> String content which are to be sanitized
+    #
+    return content.gsub(/[\u200f]/, '')
   end
 
   def log(msg)
