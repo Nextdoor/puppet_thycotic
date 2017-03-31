@@ -434,7 +434,7 @@ class Thycotic
     # * *Args*:
     #   - +content+ -> String content which are to be sanitized
     #
-    return content.gsub(/[\u200f]/, '')
+    return content.gsub(/[\u180e\u200a\u200b\u200f\u2009\ufeff]/, '')
   end
 
   def log(msg)
