@@ -28,7 +28,7 @@ describe 'Utils' do
       let(:input_string) { File.read(File.dirname(__FILE__) + '/files/test_printable') }
       let(:output_string) { File.read(File.dirname(__FILE__) + '/files/test_printable') }
 
-      it 'should sanitize it' do
+      it 'should produce the same data' do
         Utils.sanitize_content(input_string).should == output_string
       end
     end
@@ -37,7 +37,7 @@ describe 'Utils' do
       let(:input_string) { File.read(File.dirname(__FILE__) + '/files/test_input_invisible') }
       let(:output_string) { File.read(File.dirname(__FILE__) + '/files/test_output_invisible') }
 
-      it 'should sanitize it' do
+      it 'should sanitize the data leaving only printable characters' do
         Utils.sanitize_content(input_string).should == output_string
       end
     end
