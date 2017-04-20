@@ -21,3 +21,25 @@ describe 'thycotic_getsecret' do
     Puppet::Parser::Functions.function("thycotic_getsecret").should == "function_thycotic_getsecret"
   end
 end
+
+describe 'Utils' do
+  describe '::sanitize_content' do
+    context 'with a file with all printable characters' do
+      let(:input_string) { File.read(File.dirname(__FILE__) + '/files/test_printable') }
+      let(:output_string) { File.read(File.dirname(__FILE__) + '/files/test_printable') }
+
+      it 'should sanitize it' do
+        Utils.sanitize_content(input_string).should == output_string
+      end
+    end
+
+    context 'with a file with invisible, zero-width characters' do
+      let(:input_string) { File.read(File.dirname(__FILE__) + '/files/test_input_invisible') }
+      let(:output_string) { File.read(File.dirname(__FILE__) + '/files/test_output_invisible') }
+
+      it 'should sanitize it' do
+        Utils.sanitize_content(input_string).should == output_string
+      end
+    end
+  end
+end

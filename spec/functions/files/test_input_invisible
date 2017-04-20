@@ -1,0 +1,5 @@
+TEST_1='A᠎B'
+TEST_2='A​B'
+TEST_3='A‏B'
+TEST_4='A﻿B'
+TEST_5='AB'
