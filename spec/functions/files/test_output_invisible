@@ -1,0 +1,13 @@
+# Tests 1-4 contains invisible Unicode characters between the A and B
+# Test 5 does not contain any invisible characters
+
+# 180E: MONGOLIAN VOWEL SEPARATOR
+TEST_1='AB'
+# 200B: ZERO WIDTH SPACE
+TEST_2='AB'
+# 200F: RIGHT-TO-LEFT MARK
+TEST_3='AB'
+# FEFF: ZERO WIDTH NO-BREAK SPACE
+TEST_4='AB'
+# NONE
+TEST_5='AB'

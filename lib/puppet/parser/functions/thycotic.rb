@@ -341,6 +341,8 @@ class Thycotic
             content = s['Value']
           end
 
+          content = Utils.sanitize_content(content)
+
           # If the content is 'nil', then the secret cannot possibly have
           # held a value, so it must be bogus return data. Even an empty
           # secret will return a blank string.
@@ -557,5 +559,16 @@ class Thycotic
       log("Failed to log into #{@params[:serviceurl]}. Returning 'nil' object for now.")
       return nil
     end
+  end
+end
+
+class Utils
+  def self.sanitize_content(content)
+    # Return only characters in the string which are not zero-width space
+    #
+    # * *Args*:
+    #   - +content+ -> String content which are to be sanitized
+    #
+    return content.gsub(/[\u180e\u200b\u200f\ufeff]/, '')
   end
 end
