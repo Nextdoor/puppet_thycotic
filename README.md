@@ -89,6 +89,7 @@ The configuration file can be located in three places by default. It is searched
 for in the following order:
 
 - ${thycotic_configpath}/thycotic.conf
+- /etc/puppetlabs/puppet/thycotic.conf
 - /etc/puppet/thycotic.conf
 - <path to module>/lib/puppet/parser/functions/thycotic.conf
 
