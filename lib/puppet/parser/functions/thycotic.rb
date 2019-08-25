@@ -547,6 +547,7 @@ class Thycotic
       @driver.options["protocol.http.connect_timeout"] =  60 # [sec]
       @driver.options["protocol.http.send_timeout"]    = 120 # [sec]
       @driver.options["protocol.http.receive_timeout"] =  60 # [sec]
+      @driver.options["protocol.http.ssl_config.verify_mode"] = "OpenSSL::SSL::VERIFY_NONE" # secretserver has a bad cert 8/25/19
 
       return @driver
     rescue Exception=>e
