@@ -46,6 +46,8 @@ require 'yaml'
 begin
   gem 'soap4r'
 rescue LoadError
+  gem 'soap4r-ng'
+rescue LoadError
   gem 'soap4r-ruby1.9'
 end
 require 'soap/wsdlDriver'
@@ -157,13 +159,16 @@ class Thycotic
     # * *Args*:
     #   - +cache_file+ -> File descriptor for which to change mode and owner
     #
-    owner = Etc.getpwnam(@params[:cache_owner]).uid
-    group = Etc.getgrnam(@params[:cache_group]).gid
+    if File.readlines("/proc/1/cgroup").grep(/docker|lxc/).any?
+      return true
+    else
+      owner = Etc.getpwnam(@params[:cache_owner]).uid
+      group = Etc.getgrnam(@params[:cache_group]).gid
 
-    FileUtils.chmod(@params[:cache_mode], cache_file)
-    FileUtils.chown_R(owner, group, cache_file)
+      FileUtils.chmod(@params[:cache_mode], cache_file)
+      FileUtils.chown_R(owner, group, cache_file)
+    end
   end
-
   def getSecret(secretid)
     # * *Args*:
     #   - +secretid+ -> Secret ID to retrieve
