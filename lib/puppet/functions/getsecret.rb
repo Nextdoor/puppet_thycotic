@@ -1,14 +1,72 @@
 #!/usr/bin/ruby
+#
+# Copyright 2012 Nextdoor.com, Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+# The 'getsecret' function uses the Thycotic Secret Server API to retrieve
+# private data (passwords, private keys, etc) and returns it to the caller
+# as string data.
+#
+# For setup and usage instructions please see the README in the root of
+# the module. Very basic usage instructions are here:
+#
+# Example usage:
+#   $aws_creds = getsecret('539820', 'secret_name')
+#
+# Returns:
+#   $aws_creds = 'foo'
 
 require 'parseconfig'
 require 'rubygems'
 require File.join(File.dirname(__FILE__), 'thycotic.rb')
+
+# We will store our single Thycotic object here once its created
+# in an INSTANCE scoped variable.
+@thycotic = nil
+
+# Store a reference to where we loaded our last configuration file
+# from. This is used to re-configure our Thycotic object in the event
+# that someone calls the getsecret() function with a unique config
+# filename. For example:
+#
+# getsecret(123, 'password')
+# ...
+# getsecret(234, 'password', '/path/to/corp/thycotic.conf')
+#
+$last_thycotic_config_file = nil
 
 module Puppet::Parser::Functions
 
   Puppet::Functions.create_function(:getsecret) do
 
     def init(custom_config = nil)
+      # Initializes the configuration for this function. In order to avoid
+      # constantly creating new Thycotic API access objects, we store one
+      # globally once we've created it.
+      #
+      # * *Returns*:
+      #   A Thycotic object that has been fully configured
+      #
+
+      # By default, this method looks for the thycotic.conf file in the following
+      # filesystem locations:
+      #
+      #   /etc/puppet/thycotic.conf
+      #   <local path to this file>/thycotic.conf
+      #
+      # However, if a custom_config file parameter is supplied, then we use that
+      # file instead.
       possible_paths = [
         "#{Facter.value('thycotic_configpath')}/thycotic.conf",
         '/etc/puppetlabs/puppet/thycotic.conf',
