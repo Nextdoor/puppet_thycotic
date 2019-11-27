@@ -66,6 +66,7 @@ CONNECT_TIMEOUT=60 # [sec]
 SEND_TIMEOUT=120 # [sec]
 RECEIVE_TIMEOUT=60 # [sec]
 SSL_VERIFY_MODE='OpenSSL::SSL::VERIFY_NONE' # secretserver has a bad cert
+SANITIZE_CONTENT=true
 
 # For reliability during startup we store a local copy of the Secret Server
 # SOAP file named 'WSDL'. This is the default file used during startup and
@@ -97,17 +98,18 @@ class Thycotic
   def initialize(params)
     # Fill in any missing parameters to the supplied parameters hash
     @params = params
-    @params[:serviceurl]      ||= SERVICEURL
-    @params[:cache_path]      ||= CACHE_PATH
-    @params[:debug]           ||= false
-    @params[:cache_owner]     ||= CACHE_DEFAULT_OWNER
-    @params[:cache_group]     ||= CACHE_DEFAULT_GROUP
-    @params[:cache_mode]      ||= CACHE_DEFAULT_MODE
-    @params[:domain]          ||= DOMAIN_DEFAULT
-    @params[:connect_timeout] ||= CONNECT_TIMEOUT
-    @params[:send_timeout]    ||= SEND_TIMEOUT
-    @params[:receive_timeout] ||= RECEIVE_TIMEOUT
-    @params[:ssl_verify_mode] ||= SSL_VERIFY_MODE
+    @params[:serviceurl]       ||= SERVICEURL
+    @params[:cache_path]       ||= CACHE_PATH
+    @params[:debug]            ||= false
+    @params[:cache_owner]      ||= CACHE_DEFAULT_OWNER
+    @params[:cache_group]      ||= CACHE_DEFAULT_GROUP
+    @params[:cache_mode]       ||= CACHE_DEFAULT_MODE
+    @params[:domain]           ||= DOMAIN_DEFAULT
+    @params[:connect_timeout]  ||= CONNECT_TIMEOUT
+    @params[:send_timeout]     ||= SEND_TIMEOUT
+    @params[:receive_timeout]  ||= RECEIVE_TIMEOUT
+    @params[:ssl_verify_mode]  ||= SSL_VERIFY_MODE
+    @params[:sanitize_content] ||= SANITIZE_CONTENT
 
     # If debug logging is enabled, we log out our entire parameters dict,
     # including the password/username that were supplied. Debug mode is
@@ -354,7 +356,9 @@ class Thycotic
             content = s['Value']
           end
 
-          content = Utils.sanitize_content(content)
+          if @params[:sanitize_content]
+            content = Utils.sanitize_content(content)
+          end
 
           # If the content is 'nil', then the secret cannot possibly have
           # held a value, so it must be bogus return data. Even an empty
