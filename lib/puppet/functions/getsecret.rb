@@ -122,7 +122,7 @@ module Puppet::Parser::Functions
     end
 
     def getsecret(*arguments)
-      secret_id = arguments[0]
+      secret_id   = arguments[0]
       secret_name = arguments[1]
       config      = arguments[2]
 
