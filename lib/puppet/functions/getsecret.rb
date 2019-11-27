@@ -115,7 +115,7 @@ module Puppet::Parser::Functions
         config[:send_timeout] = @cfg_file['send_timeout'] unless @cfg_file['send_timeout'].nil?
         config[:receive_timeout] = @cfg_file['receive_timeout'] unless @cfg_file['receive_timeout'].nil?
         config[:ssl_verify_mode] = @cfg_file['ssl_verify_mode']
-        config[:sanitize_content] = @cfg_file['sanitize_content'] unless @cfg_file['receive_timeout'].nil?
+        config[:sanitize_content] = @cfg_file['sanitize_content'] unless @cfg_file['sanitize_content'].nil?
 
         # Create the Thycotic API object
         Thycotic.new(config)

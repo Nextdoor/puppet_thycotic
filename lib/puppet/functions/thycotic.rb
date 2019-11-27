@@ -356,7 +356,7 @@ class Thycotic
             content = s['Value']
           end
 
-          if @params[:sanitize_content]
+          if @params[:sanitize_content] == true
             content = Utils.sanitize_content(content)
           end
 
